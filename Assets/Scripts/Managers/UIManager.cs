@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,14 +10,23 @@ namespace PEC2.Managers
     /// </summary>
     public class UIManager : MonoBehaviour
     {
+        /// <value>Property <c>_instance</c> represents the singleton instance of the class.</value>
+        private static UIManager _instance;
+        
         /// <value>Property <c>healthBar</c> represents the health bar of the player.</value>
         public Image healthBar;
         
         /// <value>Property <c>shieldBar</c> represents the shield bar of the player.</value>
         public Image shieldBar;
         
-        /// <value>Property <c>crosshair</c> represents the crosshair of the current weapon.</value>
-        public Image crosshairSrite;
+        /// <value>Property <c>keycardBlue</c> represents the blue keycard.</value>
+        public Image keycardBlue;
+        
+        /// <value>Property <c>keycardGreen</c> represents the green keycard.</value>
+        public Image keycardGreen;
+        
+        /// <value>Property <c>keycardRed</c> represents the red keycard.</value>
+        public Image keycardRed;
 
         /// <value>Property <c>weaponSprite</c> represents the avatar of the current weapon.</value>
         public Image weaponSprite;
@@ -30,8 +40,25 @@ namespace PEC2.Managers
         /// <value>Property <c>messageText</c> represents the text of the message.</value>
         public TextMeshProUGUI messageText;
         
+        /// <value>Property <c>crosshair</c> represents the crosshair of the current weapon.</value>
+        public Image crosshairSrite;
+        
         /// <value>Property <c>pauseMenu</c> represents the pause menu.</value>
         public GameObject pauseMenu;
+
+        /// <summary>
+        /// Method <c>Awake</c> is called when the script instance is being loaded.
+        /// </summary>
+        private void Awake()
+        {
+            // Singleton pattern
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+                return;
+            }
+            _instance = this;
+        }
         
         /// <summary>
         /// Method <c>UpdatePlayerUI</c> updates the player UI.
@@ -45,21 +72,25 @@ namespace PEC2.Managers
         }
         
         /// <summary>
+        /// Method <c>UpdateKeycardUI</c> updates the keycard UI.
+        /// </summary>
+        /// <param name="blue">The blue keycard obtained status.</param>
+        /// <param name="green">The green keycard obtained status.</param> 
+        /// <param name="red">The red keycard obtained status.</param>
+        public void UpdateKeycardUI(bool blue, bool green, bool red)
+        {
+            keycardBlue.color = new Color(keycardBlue.color.r, keycardBlue.color.g, keycardBlue.color.b, blue ? 1.0f : keycardBlue.color.a);
+            keycardGreen.color = new Color(keycardGreen.color.r, keycardGreen.color.g, keycardGreen.color.b, green ? 1.0f : keycardGreen.color.a);
+            keycardRed.color = new Color(keycardRed.color.r, keycardRed.color.g, keycardRed.color.b, red ? 1.0f : keycardRed.color.a);
+        }
+        
+        /// <summary>
         /// Method <c>UpdateWeaponUI</c> updates the weapon UI.
         /// </summary>
         public void UpdateWeaponUI(int clipAmmo, int totalAmmo)
         {
             clipAmmoText.text = clipAmmo.ToString();
             totalAmmoText.text = totalAmmo.ToString();
-        }
-        
-        /// <summary>
-        /// Method <c>UpdateCrosshairSprite</c> updates the crosshair sprite.
-        /// </summary>
-        /// <param name="crosshair">The sprite of the current crosshair.</param>
-        public void UpdateCrosshairSprite(Image crosshair)
-        {
-            this.crosshairSrite.sprite = crosshair.sprite;
         }
         
         /// <summary>
@@ -78,6 +109,34 @@ namespace PEC2.Managers
         public void UpdateMessageText(string message)
         {
             messageText.text = message;
+        }
+        
+        /// <summary>
+        /// Method <c>UpdateMessageText</c> updates the message text.
+        /// </summary>
+        /// <param name="message">The message to be displayed.</param>
+        /// <param name="duration">The duration of the message.</param>
+        public void UpdateMessageText(string message, float duration)
+        {
+            messageText.text = message;
+            Invoke(nameof(ClearMessageText), duration);
+        }
+        
+        /// <summary>
+        /// Method <c>ClearMessageText</c> clears the message text.
+        /// </summary>
+        public void ClearMessageText()
+        {
+            messageText.text = String.Empty;
+        }
+        
+        /// <summary>
+        /// Method <c>UpdateCrosshairSprite</c> updates the crosshair sprite.
+        /// </summary>
+        /// <param name="crosshair">The sprite of the current crosshair.</param>
+        public void UpdateCrosshairSprite(Image crosshair)
+        {
+            this.crosshairSrite.sprite = crosshair.sprite;
         }
         
         /// <summary>

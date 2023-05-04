@@ -14,8 +14,14 @@ namespace PEC2.Entities
             /// <value>Property <c>health</c> represents the health of the player.</value>
             public float health = 100.0f;
             
+            /// <value>Property <c>maxHealth</c> represents the maximum health of the player.</value>
+            public float maxHealth = 100.0f;
+            
             /// <value>Property <c>shield</c> represents the shield of the player.</value>
             public float shield = 100.0f;
+            
+            /// <value>Property <c>maxShield</c> represents the maximum shield of the player.</value>
+            public float maxShield = 100.0f;
             
         #endregion
         
@@ -41,6 +47,19 @@ namespace PEC2.Entities
             
         #endregion
         
+        #region Player Keys Settings
+        
+            /// <value>Property <c>blueKeyObtained</c> represents wether the blue keycard is obtained.</value>
+            public bool blueKeyObtained;
+            
+            /// <value>Property <c>greenKeyObtained</c> represents wether the green keycard is obtained.</value>
+            public bool greenKeyObtained;
+            
+            /// <value>Property <c>redKeyObtained</c> represents wether the red keycard is obtained.</value>
+            public bool redKeyObtained;
+
+        #endregion
+
         #region Component References
 
             /// <value>Property <c>_cameraRoot</c> represents the camera root of the player.</value>
@@ -74,6 +93,41 @@ namespace PEC2.Entities
                 shield = 0.0f;
             }
             _uiManager.UpdatePlayerUI(health, shield);
+        }
+        
+        /// <summary>
+        /// Method <c>Heal</c> is called when the player heals.
+        /// </summary>
+        /// <param name="multiplier">The multiplier of the heal.</param>
+        public void RestoreHealth(float multiplier)
+        {
+            health += maxHealth * multiplier;
+            health = Mathf.Clamp(health, 0.0f, maxHealth);
+            _uiManager.UpdatePlayerUI(health, shield);
+        }
+        
+        /// <summary>
+        /// Method <c>RestoreShield</c> is called when the player restores shield.
+        /// </summary>
+        /// <param name="multiplier">The multiplier of the shield.</param>
+        public void RestoreShield(float multiplier)
+        {
+            shield += maxShield * multiplier;
+            shield = Mathf.Clamp(shield, 0.0f, maxShield);
+            _uiManager.UpdatePlayerUI(health, shield);
+        }
+        
+        /// <summary>
+        /// Method <c>RestoreAmmo</c> is called when the player restores ammo.
+        /// </summary>
+        /// <param name="multiplier">The multiplier of the ammo.</param>
+        public void RestoreAmmo(float multiplier)
+        {
+            foreach (var weapon in weapons)
+            {
+                if (weapon.isObtained)
+                    weapon.RestoreAmmo(multiplier);
+            }
         }
         
         /// <summary>
@@ -138,6 +192,27 @@ namespace PEC2.Entities
         public void AddRecoil(float recoil)
         {
             _cameraRoot.Rotate(Vector3.left, recoil);
+        }
+        
+        /// <summary>
+        /// Method <c>GetKeycard</c> gets a keycard.
+        /// </summary>
+        /// <param name="keycard"></param>
+        public void GetKeycard(string keycard)
+        {
+            switch (keycard)
+            {
+                case "Blue":
+                    blueKeyObtained = true;
+                    break;
+                case "Green":
+                    greenKeyObtained = true;
+                    break;
+                case "Red":
+                    redKeyObtained = true;
+                    break;
+            }
+            _uiManager.UpdateKeycardUI(blueKeyObtained, greenKeyObtained, redKeyObtained);
         }
     }
 }

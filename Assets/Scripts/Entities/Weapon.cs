@@ -127,6 +127,8 @@ namespace PEC2.Entities
             isReloading = false;
             _uiManager.UpdateWeaponSprite(sprite);
             _uiManager.UpdateWeaponUI(clipAmmo, totalAmmo);
+            if (clipAmmo <= 0)
+                Reload();
         }
         
         /// <summary>
@@ -215,7 +217,7 @@ namespace PEC2.Entities
             
             // Decrease the ammo in the clip, update the UI and try to reload if empty
             clipAmmo--;
-            _uiManager.UpdateWeaponUI(clipAmmo, totalAmmo);
+            UpdateUIWrapper();
             if (clipAmmo <= 0)
                 Reload();
         }
@@ -254,8 +256,26 @@ namespace PEC2.Entities
             totalAmmo -= ammoNeeded;
             
             // Update the UI
-            _uiManager.UpdateWeaponUI(clipAmmo, totalAmmo);
+            UpdateUIWrapper();
         }
 
+        /// <summary>
+        /// Method <c>RestoreAmmo</c> restores the ammo.
+        /// </summary>
+        /// <param name="multiplier">The multiplier applied to the max total ammo.</param>
+        public void RestoreAmmo(float multiplier)
+        {
+            totalAmmo = Mathf.Clamp(totalAmmo + (int) (maxTotalAmmo * multiplier), 0, maxTotalAmmo);
+            UpdateUIWrapper();
+        }
+
+        /// <summary>
+        /// Method <c>UpdateUIWrapper</c> updates the UI.
+        /// </summary>
+        private void UpdateUIWrapper()
+        {
+            if (isActiveAndEnabled)
+                _uiManager.UpdateWeaponUI(clipAmmo, totalAmmo);
+        }
     }
 }
