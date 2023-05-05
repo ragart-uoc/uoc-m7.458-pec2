@@ -43,6 +43,9 @@ namespace PEC2.Managers
         /// <value>Property <c>crosshair</c> represents the crosshair of the current weapon.</value>
         public Image crosshairSrite;
         
+        /// <value>Property <c>timerText</c> represents the text of the timer.</value>
+        public TextMeshProUGUI timerText;
+        
         /// <value>Property <c>pauseMenu</c> represents the pause menu.</value>
         public GameObject pauseMenu;
 
@@ -138,7 +141,21 @@ namespace PEC2.Managers
         {
             this.crosshairSrite.sprite = crosshair.sprite;
         }
-        
+
+        /// <summary>
+        /// Method <c>UpdateTimerText</c> updates the timer text.
+        /// </summary>
+        /// <param name="time">The time to be displayed.</param>
+        /// <param name="active">Wether the timer is active or not.</param>
+        public void UpdateTimerText(float time, bool active)
+        {
+            timerText.gameObject.SetActive(active);
+            var minutes = Mathf.FloorToInt(time / 60.0f);
+            var seconds = Mathf.FloorToInt(time % 60.0f);
+            var milliseconds = Mathf.FloorToInt((time * 100.0f) % 100.0f);
+            timerText.text = $"{minutes:00}:{seconds:00}:{milliseconds:0000}";
+        }
+
         /// <summary>
         /// Method <c>TogglePauseMenu</c> toggles the pause menu.
         /// </summary>

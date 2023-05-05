@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PEC2.Managers
 {
@@ -12,6 +13,9 @@ namespace PEC2.Managers
         
         /// <value>Property <c>uiManager</c> represents the UI manager of the game.</value>
         public UIManager uiManager;
+        
+        /// <value>Property <c>isPaused</c> represents if the game is paused.</value>
+        private bool _isPaused;
 
         /// <summary>
         /// Method <c>Awake</c> is called when the script instance is being loaded.
@@ -33,6 +37,39 @@ namespace PEC2.Managers
         private void Start()
         {
             uiManager.ClearMessageText();
+        }
+        
+        /// <summary>
+        /// Method <c>TogglePause</c> is used to pause the game.
+        /// </summary>
+        public void TogglePause()
+        {
+            _isPaused = !_isPaused;
+            // Pause or resume time and audio
+            Time.timeScale = _isPaused ? 0 : 1;
+            AudioListener.pause = _isPaused;
+            // Show or hide the pause menu
+            uiManager.TogglePauseMenu();
+        }
+
+        /// <summary>
+        /// Method <c>TooglePause</c> is used to pause the game.
+        /// </summary>
+        public void GoToMainMenu()
+        {
+            Destroy(gameObject);
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        /// <summary>
+        /// Method <c>QuitGame</c> quits the game.
+        /// </summary>
+        public void ExitGame()
+        {
+            Application.Quit();
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #endif
         }
     }
 }

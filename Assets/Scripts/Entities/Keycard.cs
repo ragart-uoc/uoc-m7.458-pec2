@@ -9,16 +9,8 @@ namespace PEC2.Entities
     /// </summary>
     public class Keycard : MonoBehaviour
     {
-        /// <value>Property <c>KeycardColors</c> represents the colors of the keycard.</value>
-        public enum KeycardColors
-        {
-            Blue,
-            Green,
-            Red
-        }
-        
         /// <value>Property <c>keycardColor</c> represents the color of the keycard.</value>
-        public KeycardColors keycardColor;
+        public KeycardProperties.Colors keycardColor;
         
         /// <value>Property <c>_uiManager</c> represents the UI manager of the game.</value>
         private UIManager _uiManager;
@@ -55,21 +47,19 @@ namespace PEC2.Entities
             // Check the color of the keycard
             switch (keycardColor)
             {
-                case KeycardColors.Blue:
+                case KeycardProperties.Colors.Blue:
                     _uiManager.UpdateMessageText("You got the blue keycard!", 2.0f);
-                    player.GetKeycard("Blue");
                     break;
-                case KeycardColors.Green:
+                case KeycardProperties.Colors.Green:
                     _uiManager.UpdateMessageText("You got the green keycard!", 2.0f);
-                    player.GetKeycard("Green");
                     break;
-                case KeycardColors.Red:
+                case KeycardProperties.Colors.Red:
                     _uiManager.UpdateMessageText("You got the red keycard!", 2.0f);
-                    player.GetKeycard("Red");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            player.GetKeycard(keycardColor);
 
             // Destroy the keycard
             Destroy(gameObject);

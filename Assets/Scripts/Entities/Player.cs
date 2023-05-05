@@ -1,6 +1,8 @@
-using PEC2.Managers;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PEC2.Managers;
+using StarterAssets;
 
 namespace PEC2.Entities
 {
@@ -48,22 +50,27 @@ namespace PEC2.Entities
         #endregion
         
         #region Player Keys Settings
-        
-            /// <value>Property <c>blueKeyObtained</c> represents wether the blue keycard is obtained.</value>
-            public bool blueKeyObtained;
-            
-            /// <value>Property <c>greenKeyObtained</c> represents wether the green keycard is obtained.</value>
-            public bool greenKeyObtained;
-            
-            /// <value>Property <c>redKeyObtained</c> represents wether the red keycard is obtained.</value>
-            public bool redKeyObtained;
+
+            /// <value>Property <c>KeycardColors</c> represents the colors of the keycard.</value>
+            private readonly Dictionary<KeycardProperties.Colors, bool> _keycardsObtained = new Dictionary<KeycardProperties.Colors, bool>()
+            {
+                {KeycardProperties.Colors.Blue, false},
+                {KeycardProperties.Colors.Green, false},
+                {KeycardProperties.Colors.Red, false}
+            };
 
         #endregion
 
         #region Component References
 
+            /// <value>Property <c>_playerInputs</c> represents the player inputs.</value>
+            private StarterAssetsInputs _playerInputs;
+
             /// <value>Property <c>_cameraRoot</c> represents the camera root of the player.</value>
             private Transform _cameraRoot;
+            
+            /// <value>Property <c>_gameManager</c> represents the game manager of the game.</value>
+            private GameManager _gameManager;
         
             /// <value>Property <c>_uiManager</c> represents the UI manager of the game.</value>
             private UIManager _uiManager;
@@ -75,7 +82,9 @@ namespace PEC2.Entities
         /// </summary>
         private void Start()
         {
+            _playerInputs = GetComponent<StarterAssetsInputs>();
             _cameraRoot = gameObject.transform.Find("PlayerCameraRoot");
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             _uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
             decals = new GameObject[numberOfDecals];
         }
@@ -197,22 +206,34 @@ namespace PEC2.Entities
         /// <summary>
         /// Method <c>GetKeycard</c> gets a keycard.
         /// </summary>
-        /// <param name="keycard"></param>
-        public void GetKeycard(string keycard)
+        /// <param name="keycardColor"></param>
+        public void GetKeycard(KeycardProperties.Colors keycardColor)
         {
-            switch (keycard)
-            {
-                case "Blue":
-                    blueKeyObtained = true;
-                    break;
-                case "Green":
-                    greenKeyObtained = true;
-                    break;
-                case "Red":
-                    redKeyObtained = true;
-                    break;
-            }
-            _uiManager.UpdateKeycardUI(blueKeyObtained, greenKeyObtained, redKeyObtained);
+            _keycardsObtained[keycardColor] = true;
+            _uiManager.UpdateKeycardUI(
+                _keycardsObtained[KeycardProperties.Colors.Blue],
+                _keycardsObtained[KeycardProperties.Colors.Green],
+                _keycardsObtained[KeycardProperties.Colors.Red]
+            );
+        }
+        
+        /// <summary>
+        /// Method <c>HasKeycard</c> checks if the player has a keycard.
+        /// </summary>
+        /// <param name="keycardColor">The color of the keycard.</param>
+        public bool HasKeycard(KeycardProperties.Colors keycardColor)
+        {
+            return _keycardsObtained[keycardColor];
+        }
+        
+        /// <summary>
+        /// Method <c>OnPause</c> is called when the player pauses the game.
+        /// </summary>
+        private void OnPause()
+        {
+            _playerInputs.cursorLocked = !_playerInputs.cursorLocked;
+            _playerInputs.cursorInputForLook = !_playerInputs.cursorInputForLook;
+            _gameManager.TogglePause();
         }
     }
 }
