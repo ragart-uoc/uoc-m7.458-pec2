@@ -37,8 +37,8 @@ namespace PEC2.Entities
         /// </summary>
         private void Update()
         {
-            // Turn the keycard using the Z axis
-            transform.Rotate(0, 0, 100 * Time.deltaTime);
+            // Turn the power up using the Y axis
+            transform.Rotate(0, 100 * Time.deltaTime, 0);
         }
 
         /// <summary>

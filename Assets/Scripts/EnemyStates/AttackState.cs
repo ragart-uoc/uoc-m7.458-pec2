@@ -42,7 +42,7 @@ namespace PEC2.EnemyStates
                 && hit.collider.CompareTag("Player"))
             {
                 // Get the player component
-                var player = hit.transform.parent.GetComponent<Player>();
+                var player = hit.transform.GetComponent<Player>();
                 
                 // Calculate the look direction
                 var lookDirection = hit.transform.position - _enemy.transform.position;

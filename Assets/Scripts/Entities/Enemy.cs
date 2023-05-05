@@ -82,6 +82,12 @@ namespace PEC2.Entities
             [HideInInspector]
             public Transform[] wayPoints;
 
+            /// <value>Property <c>mandatoryDrop</c> represents the mandatory drop of the enemy.</value>
+            public GameObject mandatoryDrop;
+            
+            /// <value>Property <c>optionalDrops</c> represents the optional drops of the enemy.</value>
+            public GameObject[] optionalDrops;
+
             /// <value>Property <c>audioSource</c> represents the audio source of the enemy.</value>
             public AudioSource audioSource;
             
@@ -96,8 +102,8 @@ namespace PEC2.Entities
 
             /// <value>Property <c>FootstepAudioVolume</c> represents the footstep audio volume of the enemy.</value>
             [Range(0, 1)] public float footstepAudioVolume = 0.5f;
-        
-        #endregion
+
+            #endregion
         
         #region Read-Only Properties
 
@@ -225,6 +231,9 @@ namespace PEC2.Entities
 
             // Wait for the animation to finish
             yield return new WaitForSeconds(2f);
+            
+            // Drop a random item
+            DropItem();
 
             // Make the enemy disappear slowly, decreasing its size
             while (transform.localScale.x > 0)
@@ -232,9 +241,32 @@ namespace PEC2.Entities
                 transform.localScale -= new Vector3(0.01f, 0.01f, 0.01f);
                 yield return null;
             }
-            
+
             // Destroy the enemy
             Destroy(gameObject);
+        }
+        
+        /// <summary>
+        /// Method <c>DropItem</c> drops a random item.
+        /// </summary>
+        private void DropItem()
+        {
+            var position = transform.position;
+            var dropPosition = new Vector3(position.x, position.y + 1.5f, position.z);
+            
+            // If there's a mandatory drop, drop it
+            if (mandatoryDrop != null)
+            {
+                Instantiate(mandatoryDrop, dropPosition, Quaternion.identity);
+                return;
+            }
+            
+            // If there's optional drop, have a 90% change of dropping one of them
+            if (optionalDrops.Length > 0 && UnityEngine.Random.Range(0, 4) == 0)
+            {
+                var drop = UnityEngine.Random.Range(0, optionalDrops.Length);
+                Instantiate(optionalDrops[drop], dropPosition, Quaternion.identity);
+            }
         }
 
         /// <summary>
