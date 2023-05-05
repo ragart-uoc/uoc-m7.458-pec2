@@ -197,8 +197,8 @@ namespace PEC2.Entities
                         Quaternion.FromToRotation(Vector3.forward, -hit.normal));
                     _player.decalIndex = (_player.decalIndex + 1) % _player.decals.Length;
                 }
-                //if (hit.transform.CompareTag("Enemy"))
-                    //hit.transform.gameObject.GetComponent<EnemyAI>().Hit(10.0f);
+                if (hit.transform.CompareTag("Enemy"))
+                    hit.transform.gameObject.GetComponent<Enemy>().TakeDamage(damage);
             }
             
             // Spawn the bullet
