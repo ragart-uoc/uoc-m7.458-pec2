@@ -11,6 +11,12 @@ namespace PEC2.EnemyStates
         /// <value>Property <c>_enemy</c> represents the enemy.</value>
         private readonly Enemy _enemy;
         
+        /// <value>Property <c>_player</c> represents the player.</value>
+        private readonly Player _player;
+        
+        /// <value>Property <c>_timeSinceSeenPlayer</c> represents the time since the player was seen.</value>
+        private float _timeSinceSeenPlayer;
+        
         /// <value>Property <c>_actualTimeBetweenShots</c> represents the actual time between shots.</value>
         private float _actualTimeBetweenShots;
         
@@ -21,6 +27,7 @@ namespace PEC2.EnemyStates
         public AttackState(Enemy enemy)
         {
             _enemy = enemy;
+            _player = GameObject.FindWithTag("Player").GetComponent<Player>();
         }
 
         /// <summary>
@@ -31,37 +38,35 @@ namespace PEC2.EnemyStates
             // Increase the timer between shots
             _actualTimeBetweenShots += Time.deltaTime;
             
-            // Emit a raycast
+            // Get the player component
+            var playerPosition = _player.transform.position;
+                
+            // Calculate the look direction
+            var lookDirection = playerPosition - _enemy.transform.position;
+            lookDirection = new Vector3(lookDirection.x, 0.0f, lookDirection.z);
+                
+            // Rotate the enemy
+            _enemy.transform.rotation = Quaternion.FromToRotation(
+                Vector3.forward,
+                lookDirection);
+            
+            // Emit a raycast to check if the player is in sight
             if (Physics.Raycast(
                     new Ray(
                         new Vector3(_enemy.transform.position.x,
                             _enemy.transform.position.y + 0.5f,
                             _enemy.transform.position.z),
-                        _enemy.transform.forward * _enemy.viewDistance),
+                        lookDirection),
                     out var hit)
                 && hit.collider.CompareTag("Player"))
             {
-                // Get the player component
-                var player = hit.transform.GetComponent<Player>();
-                
-                // Calculate the look direction
-                var lookDirection = hit.transform.position - _enemy.transform.position;
-                lookDirection = new Vector3(lookDirection.x, 0.0f, lookDirection.z);
-                
-                // Rotate the enemy
-                _enemy.transform.rotation = Quaternion.FromToRotation(
-                    Vector3.forward,
-                    new Vector3(lookDirection.x, 0.0f, lookDirection.z));
-                
-                // Calculate the look direction again and normalize it
-                lookDirection = hit.transform.position - _enemy.transform.position;
-                lookDirection = new Vector3(lookDirection.x, 0.0f, lookDirection.z);
+                _timeSinceSeenPlayer = 0.0f;
                 
                 // If the enemy is a sniper, draw the laser
                 if (_enemy.isSniper)
                 {
                     _enemy.laserLine.SetPosition(0, _enemy.transform.position + Vector3.up * _enemy.shootHeight);
-                    _enemy.laserLine.SetPosition(1, hit.transform.position);
+                    _enemy.laserLine.SetPosition(1, playerPosition);
                     _enemy.laserLine.enabled = true;
                 }
 
@@ -70,13 +75,21 @@ namespace PEC2.EnemyStates
                 {
                     _actualTimeBetweenShots = 0.0f;
                     _enemy.audioSource.Play();
-                    player.TakeDamage(_enemy.damageForce);
+                    _player.TakeDamage(_enemy.damageForce);
                 
                     // Spawn the bullet
                     var bullet = Object.Instantiate(_enemy.bulletPrefab, _enemy.bulletSpawnPoint.position, Quaternion.identity);
                     bullet.GetComponent<Rigidbody>().AddForce(lookDirection * 20f, ForceMode.Impulse);
                 }
             } else {
+                _enemy.laserLine.enabled = false;
+                _timeSinceSeenPlayer += Time.deltaTime;
+            }
+            
+            // If the player was not seen, go to alert state
+            if (_timeSinceSeenPlayer >= 5f)
+            {
+                _timeSinceSeenPlayer = 0;
                 GoToAlertState();
             }
         }

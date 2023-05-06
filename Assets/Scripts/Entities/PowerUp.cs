@@ -20,6 +20,9 @@ namespace PEC2.Entities
         
         /// <value>Property <c>powerUpType</c> represents the type of the power up.</value>
         public PowerUpTypes powerUpType;
+
+        /// <value>Property <c>persistent</c> represents if the power up is persistent.</value>
+        public bool persistent;
         
         /// <value>Property <c>_uiManager</c> represents the UI manager of the game.</value>
         private UIManager _uiManager;
@@ -32,7 +35,8 @@ namespace PEC2.Entities
             // Get the UI manager
             _uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
             // Begin to fade after 5 seconds
-            Invoke(nameof(Fade), 5.0f);
+            if (!persistent)
+                Invoke(nameof(Fade), 5.0f);
         }
 
         /// <summary>

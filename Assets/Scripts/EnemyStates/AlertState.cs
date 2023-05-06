@@ -58,7 +58,6 @@ namespace PEC2.EnemyStates
         /// </summary>
         public void Impact()
         {
-            
             GoToAttackState();
         }
 
@@ -80,7 +79,8 @@ namespace PEC2.EnemyStates
         /// </summary>
         public void GoToPatrolState()
         {
-            _enemy.navMeshAgent.isStopped = false;
+            if (_enemy.isNavigator)
+                _enemy.navMeshAgent.isStopped = false;
             _enemy.currentState = _enemy.patrolState;
         }
         
@@ -95,7 +95,11 @@ namespace PEC2.EnemyStates
         /// Method <c>OnTriggerEnter</c> is called when the enemy enters a trigger.
         /// </summary>
         /// <param name="col">The collider of the trigger.</param>
-        public void OnTriggerEnter(Collider col) {}
+        public void OnTriggerEnter(Collider col)
+        {
+            if (!col.CompareTag("Player") && _enemy.alwaysLookAtPlayer)
+                GoToAttackState();
+        }
 
         /// <summary>
         /// Method <c>OnTriggerStay</c> is called when the enemy stays in a trigger.

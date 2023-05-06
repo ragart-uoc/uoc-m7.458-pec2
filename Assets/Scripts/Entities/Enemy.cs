@@ -55,6 +55,9 @@ namespace PEC2.Entities
             /// <value>Property <c>isSniper</c> represents if the enemy is a sniper.</value>
             public bool isSniper;
             
+            /// <value>Property <c>alwaysLookAtPlayer</c> represents if the enemy always looks at the player.</value>
+            public bool alwaysLookAtPlayer;
+            
             /// <value>Property <c>laserLine</c> represents the laser line of the enemy.</value>
             public LineRenderer laserLine;
 
@@ -81,6 +84,10 @@ namespace PEC2.Entities
             /// <value>Property <c>wayPoints</c> represents the waypoints of the enemy when patrolling.</value>
             [HideInInspector]
             public Transform[] wayPoints;
+            
+            /// <value>Property <c>isNavigator</c> represents if the enemy is a navigator.</value>
+            [HideInInspector]
+            public bool isNavigator;
 
             /// <value>Property <c>mandatoryDrop</c> represents the mandatory drop of the enemy.</value>
             public GameObject mandatoryDrop;
@@ -103,7 +110,7 @@ namespace PEC2.Entities
             /// <value>Property <c>FootstepAudioVolume</c> represents the footstep audio volume of the enemy.</value>
             [Range(0, 1)] public float footstepAudioVolume = 0.5f;
 
-            #endregion
+        #endregion
         
         #region Read-Only Properties
 
@@ -133,6 +140,8 @@ namespace PEC2.Entities
             wayPoints = new Transform[waypointParent.childCount];
             for (var i = 0; i < wayPoints.Length; i++)
                 wayPoints[i] = waypointParent.GetChild(i);
+            if (wayPoints.Length > 0)
+                isNavigator = true;
 
             // Initialize the states
             patrolState = new PatrolState(this);
@@ -155,6 +164,7 @@ namespace PEC2.Entities
             // If is sniper, get the line renderer
             if (isSniper)
             {
+                laserLine.useWorldSpace = true;
                 laserLine.startWidth = 0.01f;
                 laserLine.endWidth = 0.01f;
                 laserLine.enabled = false;

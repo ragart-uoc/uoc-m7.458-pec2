@@ -11,6 +11,7 @@ namespace PEC2.EnemyStates
         /// <value>Property <c>_enemy</c> represents the enemy.</value>
         private readonly Enemy _enemy;
         
+        /// <value>Property <c>m_PreviousWayPoint</c> represents the previous way point.</value>
         private int _previousWayPoint;
         
         /// <value>Property <c>m_NextWayPoint</c> represents the next way point.</value>
@@ -30,6 +31,10 @@ namespace PEC2.EnemyStates
         /// </summary>
         public void UpdateState()
         {
+            // If no way points are defined, return.
+            if (!_enemy.isNavigator)
+                return;
+            
             // Define the next way point.
             _enemy.navMeshAgent.destination = _enemy.wayPoints[_nextWayPoint].position;
             
@@ -55,7 +60,8 @@ namespace PEC2.EnemyStates
         /// </summary>
         public void GoToAlertState()
         {
-            _enemy.navMeshAgent.isStopped = true;
+            if (_enemy.isNavigator)
+                _enemy.navMeshAgent.isStopped = true;
             _enemy.currentState = _enemy.alertState;
         }
 
@@ -64,7 +70,8 @@ namespace PEC2.EnemyStates
         /// </summary>
         public void GoToAttackState()
         {
-            _enemy.navMeshAgent.isStopped = true;
+            if (_enemy.isNavigator)
+                _enemy.navMeshAgent.isStopped = true;
             _enemy.currentState = _enemy.attackState;
         }
         
@@ -77,7 +84,8 @@ namespace PEC2.EnemyStates
         /// Method <c>GoToDyingState</c> changes the state to dying.
         /// </summary>
         public void GoToDyingState() {
-            _enemy.navMeshAgent.isStopped = true;
+            if (_enemy.isNavigator)
+                _enemy.navMeshAgent.isStopped = true;
             _enemy.currentState = _enemy.dyingState;
         }
 
@@ -87,7 +95,11 @@ namespace PEC2.EnemyStates
         /// <param name="col">The collider of the trigger.</param>
         public void OnTriggerEnter(Collider col)
         {
-            if (col.CompareTag("Player"))
+            if (!col.CompareTag("Player"))
+                return;
+            if (_enemy.alwaysLookAtPlayer)
+                GoToAttackState();
+            else
                 GoToAlertState();
         }
 
@@ -97,7 +109,11 @@ namespace PEC2.EnemyStates
         /// <param name="col">The collider of the trigger.</param>
         public void OnTriggerStay(Collider col)
         {
-            if (col.CompareTag("Player"))
+            if (!col.CompareTag("Player"))
+                return;
+            if (_enemy.alwaysLookAtPlayer)
+                GoToAttackState();
+            else
                 GoToAlertState();
         }
         

@@ -138,6 +138,7 @@ MonoBehaviour:
   rotationTime: 3
   viewDistance: 20
   isSniper: 1
+  alwaysLookAtPlayer: 0
   laserLine: {fileID: 3393348106816980714}
   shootHeight: 1.5
   navMeshAgent: {fileID: 0}
@@ -150,6 +151,12 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  isNavigator: 0
+  mandatoryDrop: {fileID: 0}
+  optionalDrops:
+  - {fileID: 1103729609193184, guid: 28b2a1be22e0b2f478af52237655a8aa, type: 3}
+  - {fileID: 1808228417298534, guid: 5600462e851871149b07ee4846b9729f, type: 3}
+  - {fileID: 1310611259822616, guid: 29af6c3b36546fc4aa0246f585e47ab0, type: 3}
   audioSource: {fileID: 3393348105743493994}
   materials: []
   animator: {fileID: 6982889479359593668}
@@ -435,7 +442,7 @@ LineRenderer:
     textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
-  m_UseWorldSpace: 1
+  m_UseWorldSpace: 0
   m_Loop: 0
 --- !u!1 &3393348107416559519
 GameObject:
