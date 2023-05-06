@@ -8,7 +8,7 @@ El objetivo de la práctica era desarrollar un shooter en primera persona utiliz
 
 ## Vídeo explicativo
 
-Pendiente
+[![Vídeo explicativo](https://img.youtube.com/vi/KmSbb5us8VA/maxresdefault.jpg)](https://youtu.be/KmSbb5us8VA)
 
 ## Versión de Unity
 

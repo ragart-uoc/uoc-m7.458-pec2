@@ -9501,7 +9501,7 @@ MonoBehaviour:
   crosshairSrite: {fileID: 952843381}
   timerText: {fileID: 17347493}
   pauseMenu: {fileID: 30319516}
-  gameOverMenu: {fileID: 0}
+  gameOverMenu: {fileID: 879360779}
 --- !u!1001 &1596325816
 PrefabInstance:
   m_ObjectHideFlags: 0
