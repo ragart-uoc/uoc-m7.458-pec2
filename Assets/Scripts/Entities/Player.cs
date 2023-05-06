@@ -25,6 +25,9 @@ namespace PEC2.Entities
             /// <value>Property <c>maxShield</c> represents the maximum shield of the player.</value>
             public float maxShield = 100.0f;
             
+            /// <value>Property <c>_isDead</c> represents if the player is dead.</value>
+            private bool _isDead;
+            
         #endregion
         
         #region Player Weapon Settings
@@ -102,6 +105,11 @@ namespace PEC2.Entities
                 shield = 0.0f;
             }
             _uiManager.UpdatePlayerUI(health, shield);
+            if (health <= 0.0f && !_isDead)
+            {
+                _isDead = true;
+                GameOver();
+            }
         }
         
         /// <summary>
@@ -234,6 +242,15 @@ namespace PEC2.Entities
             _playerInputs.cursorLocked = !_playerInputs.cursorLocked;
             _playerInputs.cursorInputForLook = !_playerInputs.cursorInputForLook;
             _gameManager.TogglePause();
+        }
+
+        public void GameOver()
+        {
+            _playerInputs.cursorLocked = !_playerInputs.cursorLocked;
+            _playerInputs.cursorInputForLook = !_playerInputs.cursorInputForLook;
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+            _uiManager.ToggleGameOverMenu();
         }
     }
 }

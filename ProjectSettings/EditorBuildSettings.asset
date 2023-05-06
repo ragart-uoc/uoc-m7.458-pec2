@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 1d6bf2861c5d62041bbf399e241a23e6
   - enabled: 1
-    path: Assets/Scenes/Level-HellOnEarth.unity
+    path: Assets/Scenes/Game.unity
     guid: 4ae18c18df5eda846aad44709897f7b9
   - enabled: 1
     path: Assets/Scenes/GameOver.unity

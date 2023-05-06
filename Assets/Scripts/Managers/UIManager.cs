@@ -48,6 +48,9 @@ namespace PEC2.Managers
         
         /// <value>Property <c>pauseMenu</c> represents the pause menu.</value>
         public GameObject pauseMenu;
+        
+        /// <value>Property <c>gameOverMenu</c> represents the game over menu.</value>
+        public GameObject gameOverMenu;
 
         /// <summary>
         /// Method <c>Awake</c> is called when the script instance is being loaded.
@@ -109,15 +112,6 @@ namespace PEC2.Managers
         /// Method <c>UpdateMessageText</c> updates the message text.
         /// </summary>
         /// <param name="message">The message to be displayed.</param>
-        public void UpdateMessageText(string message)
-        {
-            messageText.text = message;
-        }
-        
-        /// <summary>
-        /// Method <c>UpdateMessageText</c> updates the message text.
-        /// </summary>
-        /// <param name="message">The message to be displayed.</param>
         /// <param name="duration">The duration of the message.</param>
         public void UpdateMessageText(string message, float duration)
         {
@@ -162,6 +156,14 @@ namespace PEC2.Managers
         public void TogglePauseMenu()
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
+        }
+
+        /// <summary>
+        /// Method <c>ToggleGameOverMenu</c> toggles the game over menu.
+        /// </summary>
+        public void ToggleGameOverMenu()
+        {
+            gameOverMenu.SetActive(!gameOverMenu.activeSelf);
         }
     }
 }
