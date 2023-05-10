@@ -80,7 +80,7 @@ El resto de enemigos utilizan la inteligencia artificial mínima que se solicita
 
 Además, todos los enemigos desaparecen lentamente al morir.
 
-![Enemigos](README/pec2-3-items.png)
+![Enemigos](README/pec2-5-laser.png)
 
 ### Pantallas
 
@@ -92,7 +92,7 @@ El jugador dispone de una barra de escudo que absorbe la mayor cantidad del dañ
 
 Durante la partida, el jugador puede ver en todo momento la salud, el escudo y la munición del arma equipada en el HUD de la parte superior de la pantalla.
 
-![Objetos](README/pec2-4-door.png)
+![Objetos](README/pec2-3-items.png)
 
 ### Objetos
 
